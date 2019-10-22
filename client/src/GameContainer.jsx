@@ -1,111 +1,12 @@
 import React, { Component } from "react";
 import Graph from "vis-react";
 
+import graphOptions from "./utils/graphOptions";
+import defaultGraph from "./utils/defaultGraph";
+
 const colors = {
   selected: "lightblue",
   normal: "gray"
-};
-
-let graph = {
-  nodes: [
-    { id: 1, label: "START" },
-    { id: 2, label: "b" },
-    { id: 3, label: "c" },
-    { id: 4, label: "d" },
-    { id: 5, label: "e" },
-
-    { id: 15, label: "END" },
-
-    { id: 6, label: "START" },
-    { id: 7, label: "b" },
-    { id: 8, label: "c" },
-    { id: 9, label: "d" },
-    { id: 10, label: "e" }
-  ],
-  // edges: [
-  //   { from: 1, to: 2, label: 4, value: 4 },
-  //   { from: 2, to: 3, label: 1, value: 1 },
-  //   { from: 1, to: 3, label: 2, value: 2 },
-  //   { from: 3, to: 4, label: 8, value: 8 },
-  //   { from: 2, to: 4, label: 5, value: 5 },
-  //   { from: 3, to: 5, label: 10, value: 10 },
-  //   { from: 4, to: 15, label: 6, value: 6 },
-  //   { from: 4, to: 5, label: 2, value: 2 },
-  //   { from: 5, to: 15, label: 5, value: 5 },
-
-  //   { from: 6, to: 7, label: 4, value: 4 },
-  //   { from: 7, to: 8, label: 1, value: 1 },
-  //   { from: 6, to: 8, label: 2, value: 2 },
-  //   { from: 8, to: 9, label: 8, value: 8 },
-  //   { from: 7, to: 9, label: 5, value: 5 },
-  //   { from: 8, to: 10, label: 10, value: 10 },
-  //   { from: 9, to: 15, label: 6, value: 6 },
-  //   { from: 9, to: 10, label: 2, value: 2 },
-  //   { from: 10, to: 15, label: 5, value: 5 }
-  // ],
-  edges: [
-    { from: 1, to: 2, label: 4 },
-    { from: 2, to: 3, label: 1 },
-    { from: 1, to: 3, label: 2 },
-    { from: 3, to: 4, label: 8 },
-    { from: 2, to: 4, label: 5 },
-    { from: 3, to: 5, label: 10 },
-    { from: 4, to: 15, label: 6 },
-    { from: 4, to: 5, label: 2 },
-    { from: 5, to: 15, label: 5 },
-
-    { from: 6, to: 7, label: 4 },
-    { from: 7, to: 8, label: 1 },
-    { from: 6, to: 8, label: 2 },
-    { from: 8, to: 9, label: 8 },
-    { from: 7, to: 9, label: 5 },
-    { from: 8, to: 10, label: 10 },
-    { from: 9, to: 15, label: 6 },
-    { from: 9, to: 10, label: 2 },
-    { from: 10, to: 15, label: 5 }
-  ]
-};
-
-var options = {
-  // configure: { enabled: true },
-  width: "100%",
-  height: "400px",
-  layout: {
-    improvedLayout: true
-  },
-  nodes: {
-    fixed: {
-      x: false,
-      y: false
-    },
-    shape: "dot",
-    size: 25,
-    borderWidth: 1,
-    borderWidthSelected: 3,
-    font: {
-      size: 15,
-      align: "center"
-    }
-  },
-  edges: {
-    width: 5,
-    color: {
-      color: "#D3D3D3",
-      highlight: "#797979",
-      hover: "#797979",
-      opacity: 1.0
-    },
-    arrows: {
-      to: { enabled: false, scaleFactor: 1, type: "arrow" },
-      from: { enabled: false, scaleFactor: 1, type: "arrow" }
-    }
-  },
-  interaction: {
-    dragNodes: false,
-    dragView: false,
-    zoomView: false,
-    selectConnectedEdges: false
-  }
 };
 
 var events = {
@@ -144,16 +45,26 @@ class GameContainer extends Component {
   handleClick = obj => {
     // destructure
     const net = this.state.network;
+
     // get rid of annoying built in select
     net.unselectAll();
-    // skips if no nodes selected
+    // skip if no nodes selected
     if (Object.entries(obj.nodes).length === 0) return;
     // skip if selected node is same as current node
     if (obj.nodes[0] === this.state.currentNode) return;
+    // skip if not adjaent node
+    let availableNodes = net.getConnectedNodes(this.state.currentNode);
+    if (!availableNodes.includes(obj.nodes[0])) return;
 
+    // Make Move
+    this.move(obj.nodes[0]);
+  };
+
+  move = nextNodeId => {
+    console.log("Moved to Node " + nextNodeId);
     // State setup
+    const net = this.state.network;
     let newState = this.state;
-    let nextNodeId = obj.nodes[0];
 
     //Add edge traversed to score
     const edges = net.getConnectedEdges(nextNodeId);
@@ -173,20 +84,22 @@ class GameContainer extends Component {
       }
     });
 
-    // Select next node THIS MUST GO LAST
-    let availableNodes = net.getConnectedNodes(this.state.currentNode);
-    if (availableNodes.includes(nextNodeId)) {
-      // this.selectNode(newState.currentNode, "black");
-      // this.selectNode(id, "red");
-      // this.selectEdges(this.state.currentNode, "red");
-      newState.currentNode = nextNodeId;
-      this.setState(newState, () => console.log(this.state));
-    }
+    // Update local state
+    newState.currentNode = nextNodeId;
+    this.setState(newState);
+
+    // Send state to server
+    this.sendPlayerMove(nextNodeId);
 
     // render colors
     this.clearSelection();
     this.selectNode(this.state.currentNode, colors.selected);
     this.selectEdges(this.state.currentNode, colors.selected);
+  };
+
+  // send player move to server
+  sendPlayerMove = node => {
+    this.props.socket.emit("playerMoveClientEmit", { node: node });
   };
 
   clearSelection = () => {
@@ -240,8 +153,8 @@ class GameContainer extends Component {
       <div>
         <Graph
           style={{ margin: "25px", width: "100%", border: "1px black solid" }}
-          graph={graph}
-          options={options}
+          graph={defaultGraph}
+          options={graphOptions}
           events={events}
           getNetwork={this.getNetwork}
           getEdges={this.getEdges}
