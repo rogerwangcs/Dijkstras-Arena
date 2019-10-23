@@ -3,7 +3,7 @@ import "./App.css";
 import GameContainer from "./GameContainer.jsx";
 
 import io from "socket.io-client";
-const socket = io("http://localhost:4000/");
+const socket = io("http://10.0.0.122:4000/");
 
 class App extends Component {
   constructor(props) {

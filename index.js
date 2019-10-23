@@ -29,14 +29,15 @@ class Player {
 io.on("connection", socket => {
   console.log("New client connected");
 
-  let newPlayer = new Player(Object.keys(gameState.players).length, 0, 0);
+  let newPlayer = new Player(socket.id, Math.floor(Math.random() * 10 + 1), 0);
   gameState.players[socket.id] = newPlayer;
-  console.log(gameState);
+  io.emit("getStateServerEmit", { gameState: gameState });
+  console.log(gameState.players);
 
   socket.on("playerMoveClientEmit", data => {
     console.log("Player " + socket.id + " moved to node " + data.node + ".");
     gameState.players[socket.id].currentNode = data.node;
-    io.emit("playerMoveServerEmit", gameState);
+    io.sockets.emit("getStateServerEmit", { gameState: gameState });
     console.log(gameState);
   });
 

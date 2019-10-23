@@ -5,7 +5,8 @@ import graphOptions from "./utils/graphOptions";
 import defaultGraph from "./utils/defaultGraph";
 
 const colors = {
-  selected: "lightblue",
+  localNode: "blue",
+  remoteNode: "red",
   normal: "gray"
 };
 
@@ -19,19 +20,26 @@ class GameContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      playerId: null,
+      gameState: null,
       network: null,
       currentNode: 1,
-      score: 0
+      score: 0,
+      renderCount: 0
     };
   }
 
   // code runs right as graph loads
   componentDidMount = () => {
-    setTimeout(() => {
-      this.clearSelection();
-      this.selectNode(this.state.currentNode, colors.selected);
-      this.selectEdges(this.state.currentNode, colors.selected);
-    }, 25);
+    setTimeout(() => this.setState({ playerId: this.props.socket.id }), 25);
+
+    this.props.socket.on("getStateServerEmit", data => {
+      console.log("recieved game state!");
+      this.setState({ gameState: data.gameState }, () => {
+        console.log(data.gameState);
+        this.renderGraph(data.gameState);
+      });
+    });
   };
 
   componentDidUpdate = () => {
@@ -40,6 +48,9 @@ class GameContainer extends Component {
     this.state.network.on("click", obj => {
       this.handleClick(obj);
     });
+
+    // remove graph colors
+    // this.renderGraph();
   };
 
   handleClick = obj => {
@@ -61,7 +72,7 @@ class GameContainer extends Component {
   };
 
   move = nextNodeId => {
-    console.log("Moved to Node " + nextNodeId);
+    // console.log("Moved to Node " + nextNodeId);
     // State setup
     const net = this.state.network;
     let newState = this.state;
@@ -90,11 +101,6 @@ class GameContainer extends Component {
 
     // Send state to server
     this.sendPlayerMove(nextNodeId);
-
-    // render colors
-    this.clearSelection();
-    this.selectNode(this.state.currentNode, colors.selected);
-    this.selectEdges(this.state.currentNode, colors.selected);
   };
 
   // send player move to server
@@ -102,11 +108,30 @@ class GameContainer extends Component {
     this.props.socket.emit("playerMoveClientEmit", { node: node });
   };
 
+  renderGraph = gameState => {
+    this.clearSelection();
+
+    let players = Object.values(gameState.players);
+    // let newNode = gameState.players[this.props.socket.id]
+    //   .currentNode;
+    // console.log(players);
+    players.forEach(player => {
+      if (player.id === this.state.playerId) {
+        this.selectNode(player.currentNode, colors.localNode);
+        this.selectEdges(player.currentNode, colors.localNode);
+      } else {
+        this.selectNode(player.currentNode, colors.remoteNode);
+        this.selectEdges(player.currentNode, colors.remoteNode);
+      }
+    });
+    this.forceUpdate();
+  };
+
   clearSelection = () => {
     const nodes = this.state.network.body.nodes;
     Object.keys(nodes).forEach(nodeId => {
       let node = this.state.network.body.nodes[nodeId];
-      node.options.size = 20;
+      node.options.size = 35;
       node.options.color.background = colors.normal;
     });
 
@@ -122,7 +147,7 @@ class GameContainer extends Component {
   selectNode = (nodeId, color) => {
     let node = this.state.network.body.nodes[nodeId];
     node.options.color.background = color;
-    node.options.size = 25;
+    node.options.size = 45;
   };
 
   /**
@@ -150,18 +175,16 @@ class GameContainer extends Component {
 
   render() {
     return (
-      <div>
-        <Graph
-          style={{ margin: "25px", width: "100%", border: "1px black solid" }}
-          graph={defaultGraph}
-          options={graphOptions}
-          events={events}
-          getNetwork={this.getNetwork}
-          getEdges={this.getEdges}
-          getNodes={this.getNodes}
-          vis={vis => (this.vis = vis)}
-        />
-      </div>
+      <Graph
+        style={{ width: "100%", height: "100%", border: "1px black solid" }}
+        graph={defaultGraph}
+        options={graphOptions}
+        events={events}
+        getNetwork={this.getNetwork}
+        getEdges={this.getEdges}
+        getNodes={this.getNodes}
+        vis={vis => (this.vis = vis)}
+      />
     );
   }
 }

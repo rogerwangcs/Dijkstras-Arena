@@ -1,7 +1,7 @@
 export default {
   // configure: { enabled: true },
   width: "100%",
-  height: "400px",
+  height: "100%",
   layout: {
     improvedLayout: true
   },
@@ -11,11 +11,11 @@ export default {
       y: false
     },
     shape: "dot",
-    size: 25,
+    size: 35,
     borderWidth: 1,
     borderWidthSelected: 3,
     font: {
-      size: 15,
+      size: 25,
       align: "center"
     }
   },
