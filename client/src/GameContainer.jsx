@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Graph from "vis-react";
-
 import graphOptions from "./utils/graphOptions";
 import defaultGraph from "./utils/defaultGraph";
 
@@ -21,28 +20,39 @@ class GameContainer extends Component {
     super(props);
     this.state = {
       playerId: null,
+      opponentId: null,
       gameState: null,
       network: null,
       currentNode: 1,
-      score: 0,
-      renderCount: 0
+      startNode: 1,
+      endNode: 15,
+      score: 0
     };
   }
 
   // code runs right as graph loads
   componentDidMount = () => {
-    setTimeout(() => this.setState({ playerId: this.props.socket.id }), 25);
-
     this.props.socket.on("getStateServerEmit", data => {
       console.log("recieved game state!");
       this.setState({ gameState: data.gameState }, () => {
         console.log(data.gameState);
-        this.renderGraph(data.gameState);
+
+        //Set playerId
+        this.setState({ playerId: this.props.socket.id });
+        // Set opponentId
+        Object.keys(this.state.gameState.players).forEach(player => {
+          if (player !== this.state.playerId)
+            this.setState({ opponentId: player });
+        });
+        setTimeout(() => this.renderGraph(data.gameState), 10);
       });
     });
   };
 
   componentDidUpdate = () => {
+    const net = this.state.network;
+    if (net == null) return;
+
     // Handles Click in Graph
     this.handleClick({ nodes: Object });
     this.state.network.on("click", obj => {
@@ -56,6 +66,7 @@ class GameContainer extends Component {
   handleClick = obj => {
     // destructure
     const net = this.state.network;
+    if (net == null) return;
 
     // get rid of annoying built in select
     net.unselectAll();
@@ -111,19 +122,28 @@ class GameContainer extends Component {
   renderGraph = gameState => {
     this.clearSelection();
 
-    let players = Object.values(gameState.players);
+    // let players = Object.values(gameState.players);
     // let newNode = gameState.players[this.props.socket.id]
     //   .currentNode;
     // console.log(players);
-    players.forEach(player => {
-      if (player.id === this.state.playerId) {
-        this.selectNode(player.currentNode, colors.localNode);
-        this.selectEdges(player.currentNode, colors.localNode);
-      } else {
-        this.selectNode(player.currentNode, colors.remoteNode);
-        this.selectEdges(player.currentNode, colors.remoteNode);
-      }
-    });
+    const players = this.state.gameState.players;
+
+    // Highlight local player node and edges
+    this.selectNode(players[this.state.playerId].currentNode, colors.localNode);
+    this.selectEdges(
+      players[this.state.playerId].currentNode,
+      colors.localNode
+    );
+    // Highlights opponent node and edges
+    this.selectNode(
+      players[this.state.opponentId].currentNode,
+      colors.remoteNode
+    );
+    this.selectEdges(
+      players[this.state.opponentId].currentNode,
+      colors.remoteNode
+    );
+
     this.forceUpdate();
   };
 
@@ -131,7 +151,7 @@ class GameContainer extends Component {
     const nodes = this.state.network.body.nodes;
     Object.keys(nodes).forEach(nodeId => {
       let node = this.state.network.body.nodes[nodeId];
-      node.options.size = 35;
+      node.options.size = 25;
       node.options.color.background = colors.normal;
     });
 
@@ -147,7 +167,7 @@ class GameContainer extends Component {
   selectNode = (nodeId, color) => {
     let node = this.state.network.body.nodes[nodeId];
     node.options.color.background = color;
-    node.options.size = 45;
+    node.options.size = 15;
   };
 
   /**
@@ -174,17 +194,26 @@ class GameContainer extends Component {
   };
 
   render() {
+    // Makes sure client has received gamestate and also has setstate into state
+    if (this.state.playerId == null) return <div>Loading...</div>;
     return (
-      <Graph
-        style={{ width: "100%", height: "100%", border: "1px black solid" }}
-        graph={defaultGraph}
-        options={graphOptions}
-        events={events}
-        getNetwork={this.getNetwork}
-        getEdges={this.getEdges}
-        getNodes={this.getNodes}
-        vis={vis => (this.vis = vis)}
-      />
+      <div className="App">
+        <p>
+          You: {this.state.playerId}, Score:
+          {this.state.gameState.players[this.state.opponentId]["score"]}
+        </p>
+        <p>Opponent: {this.state.opponentId}</p>
+        <Graph
+          style={{ width: "100%", height: "100%", border: "1px black solid" }}
+          graph={defaultGraph}
+          options={graphOptions}
+          events={events}
+          getNetwork={this.getNetwork}
+          getEdges={this.getEdges}
+          getNodes={this.getNodes}
+          vis={vis => (this.vis = vis)}
+        />
+      </div>
     );
   }
 }

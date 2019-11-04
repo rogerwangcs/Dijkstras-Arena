@@ -1,5 +1,4 @@
 export default {
-  // configure: { enabled: true },
   width: "100%",
   height: "100%",
   layout: {
@@ -27,6 +26,10 @@ export default {
       hover: "#797979",
       opacity: 1.0
     },
+    font: {
+      size: 30,
+      strokeWidth: 10
+    },
     arrows: {
       to: { enabled: false, scaleFactor: 1, type: "arrow" },
       from: { enabled: false, scaleFactor: 1, type: "arrow" }
@@ -37,5 +40,9 @@ export default {
     dragView: false,
     zoomView: false,
     selectConnectedEdges: false
+  },
+  layout: {
+    randomSeed: 1,
+    improvedLayout: true
   }
 };

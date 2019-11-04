@@ -19,13 +19,16 @@ let gameState = {
 };
 
 class Player {
-  constructor(id, currentNode, score) {
+  constructor(id, currentNode, visitedNodes, visitedEdges, score) {
     this.id = id;
     this.currentNode = currentNode;
     this.score = score;
+    this.visitedNodes = visitedNodes;
+    this.visitedEdges = visitedEdges;
   }
 }
 
+// Start socket listening
 io.on("connection", socket => {
   console.log("New client connected");
 
