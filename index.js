@@ -32,16 +32,38 @@ class Player {
 io.on("connection", socket => {
   console.log("New client connected");
 
-  let newPlayer = new Player(socket.id, Math.floor(Math.random() * 10 + 1), 0);
+  let newPlayer = new Player(socket.id, 1, [], [], 0);
+
   gameState.players[socket.id] = newPlayer;
   io.emit("getStateServerEmit", { gameState: gameState });
   console.log(gameState.players);
 
   socket.on("playerMoveClientEmit", data => {
-    console.log("Player " + socket.id + " moved to node " + data.node + ".");
-    gameState.players[socket.id].currentNode = data.node;
-    io.sockets.emit("getStateServerEmit", { gameState: gameState });
+    // define our players
+    let player = gameState.players[socket.id];
+    let opponent = null;
+    Object.keys(gameState.players).forEach(id => {
+      if (id !== socket.id) opponent = gameState.players[id];
+    });
+
+    // remove a lot of ndoes!
+    let index = player.visitedNodes.indexOf(data.currentNode);
+    if (index > -1) player.visitedNodes.splice(index, 1);
+    index = player.visitedEdges.indexOf(data.edge);
+    if (index > -1) player.visitedEdges.splice(index, 1);
+
+    index = opponent.visitedNodes.indexOf(data.currentNode);
+    if (index > -1) opponent.visitedNodes.splice(index, 1);
+    index = opponent.visitedEdges.indexOf(data.edge);
+    if (index > -1) opponent.visitedEdges.splice(index, 1);
+
+    // add visited node and edge
+    player.currentNode = data.nextNode;
+    player.visitedNodes.push(data.currentNode);
+    player.visitedEdges.push(data.edge);
+
     console.log(gameState);
+    io.sockets.emit("getStateServerEmit", { gameState: gameState });
   });
 
   socket.on("disconnect", () => {

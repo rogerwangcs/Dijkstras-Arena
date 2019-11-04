@@ -5,7 +5,9 @@ import defaultGraph from "./utils/defaultGraph";
 
 const colors = {
   localNode: "blue",
+  localVisited: "teal",
   remoteNode: "red",
+  remoteVisited: "pink",
   normal: "gray"
 };
 
@@ -83,66 +85,70 @@ class GameContainer extends Component {
   };
 
   move = nextNodeId => {
-    // console.log("Moved to Node " + nextNodeId);
     // State setup
     const net = this.state.network;
     let newState = this.state;
 
     //Add edge traversed to score
     const edges = net.getConnectedEdges(nextNodeId);
+    let traversedEdge = null;
     edges.forEach(edgeId => {
       const edge = this.state.network.body.edges[edgeId];
-      const node1 = edge.from.id;
-      const node2 = edge.to.id;
+      const node1 = edge.fromId;
+      const node2 = edge.toId;
 
-      // console.log(node1 + " " + node2);
-      // console.log(this.state.currentNode + " " + nextNodeId);
       if (
         (node1 === this.state.currentNode && node2 === nextNodeId) ||
         (node2 === this.state.currentNode && node1 === nextNodeId)
       ) {
+        traversedEdge = edge.fromId + "-" + edge.toId;
         const weight = edge.options.value;
         newState.score += weight;
       }
     });
 
+    // Send state to server
+    this.sendPlayerMove(nextNodeId, this.state.currentNode, traversedEdge);
+
     // Update local state
     newState.currentNode = nextNodeId;
     this.setState(newState);
-
-    // Send state to server
-    this.sendPlayerMove(nextNodeId);
   };
 
   // send player move to server
-  sendPlayerMove = node => {
-    this.props.socket.emit("playerMoveClientEmit", { node: node });
+  sendPlayerMove = (nextNode, currentNode, edge) => {
+    this.props.socket.emit("playerMoveClientEmit", {
+      nextNode: nextNode,
+      currentNode: currentNode,
+      edge: edge
+    });
   };
 
-  renderGraph = gameState => {
+  renderGraph = () => {
     this.clearSelection();
 
-    // let players = Object.values(gameState.players);
-    // let newNode = gameState.players[this.props.socket.id]
-    //   .currentNode;
-    // console.log(players);
     const players = this.state.gameState.players;
+    const player = players[this.state.playerId];
+    const opponent = players[this.state.opponentId];
 
-    // Highlight local player node and edges
-    this.selectNode(players[this.state.playerId].currentNode, colors.localNode);
-    this.selectEdges(
-      players[this.state.playerId].currentNode,
-      colors.localNode
-    );
+    // Highlight opponent visited nodes and edges
+    if (opponent.visitedNodes.length !== 0)
+      this.selectNodesFromList(opponent.visitedNodes, colors.remoteVisited);
+    if (opponent.visitedEdges.length !== 0)
+      this.selectEdgesFromList(opponent.visitedEdges, colors.remoteVisited);
+
+    // Highlight local player visited nodes and edges
+    if (player.visitedNodes.length !== 0)
+      this.selectNodesFromList(player.visitedNodes, colors.localVisited);
+    if (player.visitedEdges.length !== 0)
+      this.selectEdgesFromList(player.visitedEdges, colors.localVisited);
+
     // Highlights opponent node and edges
-    this.selectNode(
-      players[this.state.opponentId].currentNode,
-      colors.remoteNode
-    );
-    this.selectEdges(
-      players[this.state.opponentId].currentNode,
-      colors.remoteNode
-    );
+    this.selectNode(opponent.currentNode, colors.remoteNode);
+    this.selectEdges(opponent.currentNode, colors.remoteNode);
+    // Highlight local player node and edges
+    this.selectNode(player.currentNode, colors.localNode);
+    this.selectEdges(player.currentNode, colors.localNode);
 
     this.forceUpdate();
   };
@@ -178,6 +184,25 @@ class GameContainer extends Component {
     let edges = this.state.network.getConnectedEdges(nodeId);
     edges.forEach(edgeId => {
       let edge = this.state.network.body.edges[edgeId];
+      edge.options.color.color = color;
+      edge.options.width = 10;
+    });
+  };
+
+  selectNodesFromList = (nodes, color) => {
+    nodes.forEach(nodeId => {
+      let node = this.state.network.body.nodes[nodeId];
+      node.options.color.background = color;
+      node.options.size = 15;
+    });
+  };
+
+  selectEdgesFromList = (edges, color) => {
+    edges.forEach(edgeId => {
+      let edge = null;
+      Object.values(this.state.network.body.edges).forEach(e => {
+        if (e.fromId + "-" + e.toId === edgeId) edge = e;
+      });
       edge.options.color.color = color;
       edge.options.width = 10;
     });
