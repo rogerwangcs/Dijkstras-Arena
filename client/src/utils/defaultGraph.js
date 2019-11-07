@@ -35,6 +35,7 @@ export default {
   //   { from: 9, to: 10, label: 2, value: 2 },
   //   { from: 10, to: 15, label: 5, value: 5 }
   // ],
+
   edges: [
     { from: 1, to: 2, label: 4 },
     { from: 2, to: 3, label: 1 },

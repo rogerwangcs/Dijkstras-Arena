@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Graph from "vis-react";
 import graphOptions from "./utils/graphOptions";
 import defaultGraph from "./utils/defaultGraph";
+import dijstras from "./utils/dijkstras";
 
 const colors = {
   localNode: "blue",
@@ -217,6 +218,8 @@ class GameContainer extends Component {
   getNodes = data => {
     console.log(data);
   };
+
+  dijkstras = (vertices, edges, u, v) => {};
 
   render() {
     // Makes sure client has received gamestate and also has setstate into state
