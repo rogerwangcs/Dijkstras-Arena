@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Graph from "vis-react";
-import graphOptions from "./utils/graphOptions";
-import defaultGraph from "./utils/defaultGraph";
-import dijstras from "./utils/dijkstras";
+import graphOptions from "../utils/graphOptions";
+import defaultGraph from "../utils/defaultGraph";
+import dijkstras from "../utils/dijkstras";
 
 const colors = {
   localNode: "blue",
