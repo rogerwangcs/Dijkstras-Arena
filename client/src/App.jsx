@@ -14,6 +14,7 @@ import GameContainer from "./screens/GameContainer.jsx";
 
 import io from "socket.io-client";
 const socket = io("http://localhost:4000/");
+// const socket = io("136.167.212.5:4000");
 
 class App extends Component {
   constructor(props) {
@@ -45,7 +46,7 @@ class App extends Component {
             <Route
               exact
               path={process.env.PUBLIC_URL + "/lobby"}
-              component={Lobby}
+              component={() => <Lobby socket={socket} />}
             />
             <Route
               exact

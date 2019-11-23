@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import Graph from "vis-react";
+import GameOverlay from "../components/GameOverlay";
 import graphOptions from "../utils/graphOptions";
 import defaultGraph from "../utils/defaultGraph";
-import dijkstras from "../utils/dijkstras";
+// import dijkstras from "../utils/dijkstras";
 
 const colors = {
   localNode: "blue",
@@ -185,9 +186,25 @@ class GameContainer extends Component {
     let edges = this.state.network.getConnectedEdges(nodeId);
     edges.forEach(edgeId => {
       let edge = this.state.network.body.edges[edgeId];
+      console.log(edge);
       edge.options.color.color = color;
       edge.options.width = 10;
     });
+  };
+
+  getAdjNodes = () => {
+    if (this.network == null) {
+      setTimeout(() => this.getAdjNodes(), 100);
+      return;
+    }
+    let edges = this.state.network.getConnectedEdges(this.state.currentNode);
+    let adjNodes = [];
+    edges.forEach(edgeId => {
+      let edge = this.state.network.body.edges[edgeId];
+      adjNodes.push(edge.toId);
+    });
+    console.log(adjNodes);
+    return adjNodes;
   };
 
   selectNodesFromList = (nodes, color) => {
@@ -241,6 +258,7 @@ class GameContainer extends Component {
           getNodes={this.getNodes}
           vis={vis => (this.vis = vis)}
         />
+        <GameOverlay getAdjNodes={this.getAdjNodes} />
       </div>
     );
   }

@@ -1,18 +1,23 @@
 export default {
   nodes: [
-    { id: 1, label: "START" },
-    { id: 2, label: "b" },
-    { id: 3, label: "c" },
-    { id: 4, label: "d" },
-    { id: 5, label: "e" },
+    {
+      id: 1,
+      label: "S1 0",
+      font: { face: "Monospace", align: "center", marginTop: "-10px" },
+      dist: 0
+    },
+    { id: 2, label: "b 0", dist: 0 },
+    { id: 3, label: "c 0", dist: 0 },
+    { id: 4, label: "d 0", dist: 0 },
+    { id: 5, label: "e 0", dist: 0 },
 
-    { id: 15, label: "END" },
+    { id: 15, label: "X 0", dist: 0 },
 
-    { id: 6, label: "START" },
-    { id: 7, label: "b" },
-    { id: 8, label: "c" },
-    { id: 9, label: "d" },
-    { id: 10, label: "e" }
+    { id: 6, label: "S2 0", dist: 0 },
+    { id: 7, label: "b 0", dist: 0 },
+    { id: 8, label: "c 0", dist: 0 },
+    { id: 9, label: "d 0", dist: 0 },
+    { id: 10, label: "e 0", dist: 0 }
   ],
   edges: [
     { from: 1, to: 2, label: 4 },

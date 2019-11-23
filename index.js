@@ -15,7 +15,8 @@ const io = socketIo(server); // < Interesting!
 const getApiAndEmit = "TODO";
 
 let gameState = {
-  players: {} // socket
+  players: {}, // socket
+  numPlayers: 0
 };
 
 class Player {
@@ -37,6 +38,11 @@ io.on("connection", socket => {
   gameState.players[socket.id] = newPlayer;
   io.emit("getStateServerEmit", { gameState: gameState });
   console.log(gameState.players);
+
+  gameState.numPlayers += 1;
+  if (gameState.numPlayers == 2) {
+    io.sockets.emit("startGame");
+  }
 
   socket.on("playerMoveClientEmit", data => {
     // define our players
@@ -68,6 +74,7 @@ io.on("connection", socket => {
 
   socket.on("disconnect", () => {
     delete gameState.players[socket.id];
+    gameState.numPlayers -= 1;
     console.log(gameState);
   });
 });
