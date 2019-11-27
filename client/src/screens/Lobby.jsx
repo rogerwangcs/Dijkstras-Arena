@@ -14,13 +14,6 @@ class Lobby extends Component {
     this.state = {};
   }
 
-  componentDidMount = () => {
-    console.log("game started");
-    this.props.socket.on("startGame", res => {
-      this.props.history.push("./game");
-    });
-  };
-
   render() {
     return <SLobby>Lobby</SLobby>;
   }

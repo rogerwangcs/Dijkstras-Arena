@@ -1,15 +1,9 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
 import Graph from "vis-react";
-import Lobby from "./Lobby";
 import GameOverlay from "../components/GameOverlay";
 import graphOptions from "../utils/graphOptions";
 import defaultGraph from "../utils/defaultGraph";
 // import dijkstras from "../utils/dijkstras";
-
-import io from "socket.io-client";
-// const socket = io("http://localhost:4000/");
-// const socket = io("136.167.212.5:4000");
 
 const colors = {
   localNode: "blue",
@@ -25,11 +19,10 @@ var events = {
   }
 };
 
-class GameContainer extends Component {
+class SinglePlayer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      socket: io("http://localhost:4000/"),
       playerId: null,
       opponentId: null,
       gameState: null,
@@ -43,29 +36,21 @@ class GameContainer extends Component {
 
   // code runs right as graph loads
   componentDidMount = () => {
-    this.state.socket.on("startGame", game => {
-      let gameState = game.gameState;
-      this.setState({ gameState: gameState }, () => {
-        console.log(gameState);
+    this.props.socket.on("getStateServerEmit", data => {
+      console.log("recieved game state!");
+      this.setState({ gameState: data.gameState }, () => {
+        console.log(data.gameState);
 
         //Set playerId
-        this.setState({ playerId: this.state.socket.id });
+        this.setState({ playerId: this.props.socket.id });
         // Set opponentId
-        Object.keys(gameState.players).forEach(player => {
-          if (player !== this.state.socket.id)
+        Object.keys(this.state.gameState.players).forEach(player => {
+          if (player !== this.state.playerId)
             this.setState({ opponentId: player });
         });
-        setTimeout(() => this.renderGraph(gameState), 10);
+        setTimeout(() => this.renderGraph(data.gameState), 10);
       });
     });
-
-    this.state.socket.on("endGame", () => {
-      this.props.history.push("/");
-    });
-  };
-
-  componentWillUnmount = () => {
-    this.state.socket.disconnect();
   };
 
   componentDidUpdate = () => {
@@ -134,7 +119,7 @@ class GameContainer extends Component {
 
   // send player move to server
   sendPlayerMove = (nextNode, currentNode, edge) => {
-    this.state.socket.emit("playerMoveClientEmit", {
+    this.props.socket.emit("playerMoveClientEmit", {
       nextNode: nextNode,
       currentNode: currentNode,
       edge: edge
@@ -255,7 +240,7 @@ class GameContainer extends Component {
 
   render() {
     // Makes sure client has received gamestate and also has setstate into state
-    if (this.state.playerId == null) return <Lobby />;
+    if (this.state.playerId == null) return <div>Loading...</div>;
     return (
       <div className="App">
         <p>
@@ -273,10 +258,10 @@ class GameContainer extends Component {
           getNodes={this.getNodes}
           vis={vis => (this.vis = vis)}
         />
-        {/* <GameOverlay getAdjNodes={this.getAdjNodes} /> */}
+        <GameOverlay getAdjNodes={this.getAdjNodes} />
       </div>
     );
   }
 }
 
-export default withRouter(GameContainer);
+export default SinglePlayer;

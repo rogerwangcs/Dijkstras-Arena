@@ -12,21 +12,13 @@ import Lobby from "./screens/Lobby";
 import Learn from "./screens/Learn";
 import GameContainer from "./screens/GameContainer.jsx";
 
-import io from "socket.io-client";
-const socket = io("http://localhost:4000/");
-// const socket = io("136.167.212.5:4000");
+const socket = null;
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
-
-  componentDidMount = () => {
-    // socket.on("playerMove", data => {
-    //   console.log(data);
-    // });
-  };
 
   render() {
     return (
@@ -46,7 +38,7 @@ class App extends Component {
             <Route
               exact
               path={process.env.PUBLIC_URL + "/lobby"}
-              component={() => <Lobby socket={socket} />}
+              component={() => <Lobby />}
             />
             <Route
               exact

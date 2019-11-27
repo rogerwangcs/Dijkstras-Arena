@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { withRouter } from "react-router";
 import styled from "styled-components";
 
+import dijkstra from "../utils/Dijkstras2";
+
 const theme = {
   primary: "#2453c9",
   creme: "#fffcf5"
@@ -57,6 +59,10 @@ class MainMenu extends Component {
     super(props);
     this.state = {};
   }
+
+  componentDidMount = () => {
+    dijkstra();
+  };
   render() {
     return (
       <SMainMenu>
@@ -66,7 +72,7 @@ class MainMenu extends Component {
             <p>Learn Dijkstra</p>
           </div>
         </SButton>
-        <SButton onClick={() => this.props.history.push("/lobby")}>
+        <SButton onClick={() => this.props.history.push("/game")}>
           <div>
             <p>Compete</p>
           </div>
