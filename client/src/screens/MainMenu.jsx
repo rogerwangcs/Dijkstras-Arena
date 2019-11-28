@@ -18,13 +18,14 @@ const SMainMenu = styled.div`
   padding-top: 10vh;
 
   h1 {
-    font-size: 6em;
+    font-size: 5em;
     margin-bottom: 10vh;
   }
 
   @media (max-width: 500px) {
     h1 {
-      font-size: 3em;
+      font-size: 2.5em;
+      margin: 15px 0px 10vh;
     }
   }
 `;
@@ -34,7 +35,7 @@ const SButton = styled.div`
   div {
     display: inline-block;
     background-color: ${theme.primary};
-    margin: 25px;
+    margin: 15px;
     padding: 15px 50px;
     border-radius: 50px;
     p,
@@ -82,6 +83,7 @@ class MainMenu extends Component {
             <a
               href="https://github.com/rogerwangcs/Dijkstras-Arena"
               target="_blank"
+              rel="noopener noreferrer"
             >
               Algorithms Report
             </a>
@@ -92,6 +94,7 @@ class MainMenu extends Component {
             <a
               href="https://github.com/rogerwangcs/Dijkstras-Arena"
               target="_blank"
+              rel="noopener noreferrer"
             >
               Source Code
             </a>

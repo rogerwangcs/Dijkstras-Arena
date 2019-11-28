@@ -1,9 +1,7 @@
 export default {
   width: "100%",
   height: "100%",
-  layout: {
-    improvedLayout: true
-  },
+  autoResize: true,
   nodes: {
     fixed: {
       x: false,
@@ -13,6 +11,9 @@ export default {
     size: 35,
     borderWidth: 1,
     borderWidthSelected: 3,
+    color: {
+      border: "white"
+    },
     font: {
       size: 25,
       align: "center"
@@ -24,10 +25,10 @@ export default {
       color: "#D3D3D3",
       highlight: "#797979",
       hover: "#797979",
-      opacity: 1.0
+      opacity: 0.75
     },
     font: {
-      size: 30,
+      size: 25,
       strokeWidth: 10
     },
     arrows: {
@@ -37,12 +38,8 @@ export default {
   },
   interaction: {
     dragNodes: false,
-    dragView: false,
-    zoomView: false,
+    dragView: true,
+    zoomView: true,
     selectConnectedEdges: false
-  },
-  layout: {
-    randomSeed: 1,
-    improvedLayout: true
   }
 };

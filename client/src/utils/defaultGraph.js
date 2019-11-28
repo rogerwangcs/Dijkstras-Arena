@@ -1,23 +1,24 @@
+let font = { vadjust: -40 };
+
 export default {
   nodes: [
     {
       id: 1,
-      label: "S1 0",
-      font: { face: "Monospace", align: "center", marginTop: "-10px" },
-      dist: 0
+      label: 0,
+      font: font
     },
-    { id: 2, label: "b 0", dist: 0 },
-    { id: 3, label: "c 0", dist: 0 },
-    { id: 4, label: "d 0", dist: 0 },
-    { id: 5, label: "e 0", dist: 0 },
+    { id: 2, label: Infinity, font: font },
+    { id: 3, label: Infinity, font: font },
+    { id: 4, label: Infinity, font: font },
+    { id: 5, label: Infinity, font: font },
 
-    { id: 15, label: "X 0", dist: 0 },
+    { id: 15, label: Infinity, font: font },
 
-    { id: 6, label: "S2 0", dist: 0 },
-    { id: 7, label: "b 0", dist: 0 },
-    { id: 8, label: "c 0", dist: 0 },
-    { id: 9, label: "d 0", dist: 0 },
-    { id: 10, label: "e 0", dist: 0 }
+    { id: 6, label: Infinity, font: font },
+    { id: 7, label: Infinity, font: font },
+    { id: 8, label: Infinity, font: font },
+    { id: 9, label: Infinity, font: font },
+    { id: 10, label: Infinity, font: font }
   ],
   edges: [
     { from: 1, to: 2, label: 4 },

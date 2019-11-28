@@ -20,6 +20,11 @@ class App extends Component {
     this.state = {};
   }
 
+  componentDidMount = () => {
+    if (!localStorage.getItem("matchHistory"))
+      localStorage.setItem("matchHistory", JSON.stringify([]));
+  };
+
   render() {
     return (
       <Router>
