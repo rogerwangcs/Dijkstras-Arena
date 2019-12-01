@@ -1,0 +1,44 @@
+html,
+body {
+  margin: 0px;
+  overflow: hidden;
+  background-color: rgb(35, 35, 35);
+}
+.App {
+  width: 100vw;
+  height: 100vh;
+  font-family: sans-serif;
+  text-align: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a {
+  margin: 0px;
+  padding: 0px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Open Sans", sans-serif;
+}
+
+p {
+  font-family: "Roboto", sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+div.vis-network {
+  background-color: rgb(25, 25, 25);
+}
