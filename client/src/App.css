@@ -2,6 +2,7 @@ html,
 body {
   margin: 0px;
   overflow: hidden;
+  background-color: rgb(35, 35, 35);
 }
 .App {
   width: 100vw;

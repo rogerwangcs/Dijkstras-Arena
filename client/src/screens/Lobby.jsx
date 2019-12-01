@@ -8,6 +8,13 @@ const SLobby = styled.div`
   overflow: hidden;
 
   h1 {
+    color: white;
+    font-size: 5em;
+    margin: 100px;
+  }
+  h2 {
+    color: white;
+    font-size: 2em;
     margin: 100px;
   }
 `;
@@ -15,15 +22,17 @@ const SLobby = styled.div`
 class Lobby extends Component {
   constructor(props) {
     super(props);
+
+    let name = "";
+    if (localStorage.getItem("playerName") !== null) {
+      name = localStorage.getItem("playerName");
+    }
+
     this.state = {
-      name: "",
+      name: name,
       queued: false
     };
   }
-
-  // componentDidMount = () => {
-  //   this.props.enterQueue("test user");
-  // };
 
   onInput = e => {
     e.preventDefault();
@@ -34,6 +43,7 @@ class Lobby extends Component {
     if (this.state.name.length > 0) {
       this.setState({ queued: true });
       this.props.enterQueue(this.state.name.substring(0, 12));
+      localStorage.setItem("playerName", this.state.name);
     } else {
       alert("Enter a name");
     }
@@ -45,7 +55,7 @@ class Lobby extends Component {
         <h1>Lobby</h1>
         {this.state.queued ? (
           <React.Fragment>
-            <h1>Matching with Opponents...</h1>
+            <h2>Matching with Opponents...</h2>
             <button
               style={{ fontSize: "36px" }}
               onClick={() => {
@@ -57,15 +67,17 @@ class Lobby extends Component {
           </React.Fragment>
         ) : (
           <React.Fragment>
-            <input
-              value={this.state.name}
-              onChange={this.onInput}
-              placeholder="Your name"
-              style={{ fontSize: "36px" }}
-            ></input>
-            <button style={{ fontSize: "36px" }} onClick={this.submitQueue}>
-              Play
-            </button>
+            <form onSubmit={this.submitQueue}>
+              <input
+                value={this.state.name}
+                onChange={this.onInput}
+                placeholder="Your name"
+                style={{ fontSize: "36px" }}
+              ></input>
+              <button style={{ fontSize: "36px" }} type="submit">
+                Play
+              </button>
+            </form>
           </React.Fragment>
         )}
       </SLobby>

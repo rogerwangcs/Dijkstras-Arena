@@ -4,8 +4,7 @@ import Graph from "vis-react";
 import graphOptions from "../utils/graphOptions";
 import defaultGraph from "../utils/defaultGraph";
 import GameOverlayLearn from "../components/GameOverlayLearn";
-import dijkstra from "../utils/Dijkstras2";
-import { throws } from "assert";
+import dijkstra from "../utils/dijkstras";
 
 const colors = {
   localNode: "#185fab",

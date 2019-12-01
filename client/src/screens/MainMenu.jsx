@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { withRouter } from "react-router";
 import styled from "styled-components";
 
-import dijkstra from "../utils/Dijkstras2";
-
 const theme = {
   primary: "#2453c9",
   creme: "#fffcf5"
@@ -13,11 +11,11 @@ const SMainMenu = styled.div`
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background-color: ${theme.creme};
 
   padding-top: 10vh;
 
   h1 {
+    color: white;
     font-size: 5em;
     margin-bottom: 10vh;
   }

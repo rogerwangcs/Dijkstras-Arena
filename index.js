@@ -8,7 +8,8 @@ const port = process.env.PORT || 4000;
 const routes = require("./routes/index");
 
 const app = express();
-app.use(express.static(path.join(__dirname, "/client/build")));
+
+app.use(express.static(path.join(__dirname, "client/build")));
 app.use(routes);
 const server = http.createServer(app);
 const io = socketIo(server);

@@ -1,70 +1,66 @@
-import BinaryHeap from "./binaryHeap";
+import { PriorityQueue } from "./PriorityQueue.js";
 
-const minimum = (a, b) => {
-  if (a < b) return a;
-  else return b;
+const createAdjListGraph = graphObj => {
+  let adjList = {};
+  graphObj.nodes.forEach(node => {
+    adjList[node.id] = [];
+  });
+  graphObj.edges.forEach(edge => {
+    adjList[edge.from].push({ node: edge.to, weight: edge.label });
+    adjList[edge.to].push({ node: edge.from, weight: edge.label });
+  });
+  return adjList;
 };
 
-var adj;
-const adj_Construct = (nodes, edges) => {
-  adj = Array(nodes.length);
-  for (var e of edges) {
-    adj[e.from].push(e.to);
-  }
-};
+const dijkstrasAlgorithm = (graph, startNode) => {
+  let adjList = createAdjListGraph(graph);
+  let distances = {};
 
-// nodes: set of all Nodes in G
-// edges: set of all edges in G
-// s: Starting node
-//outputs:
-// X: stored the sequence of steps of using Dijkstra's algorithm, including node and its value
-// dist[s.id][u.id]: minimum distance from s to u
-const dijkstras = (nodes, edges, s) => {
-  // X stores the order of nodes visited as well as their stored weight at that time to determing Dijkstra's Algorithm
-  var X = [];
+  // Stores the reference to previous nodes
+  let prev = {};
+  let pq = new PriorityQueue(adjList.length * adjList.length);
 
-  var dist = Array(nodes.length);
-  for (i of dist) {
-    i = Array(nodes.length);
-  }
-  // create priority queue
-  var priorityQueue = new BinaryHeap(
-    function(element) {
-      return element.value;
-    },
-    function(element) {
-      return element.node.id;
-    },
-    "value"
-  );
-
-  priorityQueue.push({ node: s, value: 0 });
-  dist[s.id][s.id] = 0;
-  var i;
-  var dist = new Array(2);
-  for (var u of nodes) {
-    if (u != s) {
-      priorityQueue.push({ node: u, Infinity });
-      dist[s.id][u.id] = Infinity;
+  // Set distances to all nodes to be infinite except startNode
+  distances[startNode] = 0;
+  pq.enqueue(startNode, 0);
+  Object.keys(adjList).forEach(node => {
+    if (node != startNode) {
+      distances[node] = Infinity;
     }
-  }
+    prev[node] = null;
+  });
 
-  var i;
-  var v;
-  for (i = 1; i < nodes.length; i++) {
-    v = priorityQueue.pop();
-    for (var u of adj(v.node)) {
-      //adj() also need to implemented in graph structure
-      dist[s.id][u.id] = minimum(
-        dist[s.id][u.id],
-        // dist[s.id][v.id] + edges[v.id][u.id]
-        dist[s.id][v.id] + 1
-      ); // Need to add data structure for length - weight on edge connecting v to u.
-      priorityQueue.decreaseKey(u, dist[s.id][u.id]);
-    }
-    X.push({ node: u, key: dist[s.id][u.id] });
+  let allDistances = [];
+  let allPQ = [];
+
+  while (!pq.isEmpty()) {
+    allDistances.push(JSON.parse(JSON.stringify(distances)));
+    allPQ.push(JSON.parse(JSON.stringify(pq.container)));
+    let minNode = pq.dequeue();
+    let currNode = minNode.data;
+    let weight = minNode.priority;
+    adjList[currNode].forEach(neighbor => {
+      let alt;
+      distances[currNode] === Infinity
+        ? (alt = neighbor.weight)
+        : (alt = distances[currNode] + neighbor.weight);
+      if (alt < distances[neighbor.node]) {
+        distances[neighbor.node] = alt;
+        prev[neighbor.node] = currNode;
+        pq.enqueue(neighbor.node, distances[neighbor.node]);
+        allDistances.push(JSON.parse(JSON.stringify(distances)));
+        allPQ.push(JSON.parse(JSON.stringify(pq.container)));
+      }
+    });
   }
-  return dist;
+  allDistances.push(JSON.parse(JSON.stringify(distances)));
+  allPQ.push(JSON.parse(JSON.stringify(pq.container)));
+  let data = {
+    allDistances: allDistances,
+    allPQ: allPQ,
+    finalDistances: distances
+  };
+  return data;
 };
 
-export default dijkstras;
+export default dijkstrasAlgorithm;

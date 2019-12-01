@@ -104,6 +104,7 @@ const ExploreContainer = styled.div`
     }
     :hover {
       cursor: pointer;
+      background-color: lightgray;
     }
 
     @media (max-width: 500px) {
