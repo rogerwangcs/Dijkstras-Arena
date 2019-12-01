@@ -31,8 +31,11 @@ const dijkstrasAlgorithm = (graph, startNode) => {
   });
 
   let allDistances = [];
+  let allPQ = [];
 
   while (!pq.isEmpty()) {
+    allDistances.push(JSON.parse(JSON.stringify(distances)));
+    allPQ.push(JSON.parse(JSON.stringify(pq.container)));
     let minNode = pq.dequeue();
     let currNode = minNode.data;
     let weight = minNode.priority;
@@ -45,13 +48,19 @@ const dijkstrasAlgorithm = (graph, startNode) => {
         distances[neighbor.node] = alt;
         prev[neighbor.node] = currNode;
         pq.enqueue(neighbor.node, distances[neighbor.node]);
-        allDistances.push(distances);
-        console.log(JSON.parse(JSON.stringify(distances)));
+        allDistances.push(JSON.parse(JSON.stringify(distances)));
+        allPQ.push(JSON.parse(JSON.stringify(pq.container)));
       }
     });
   }
-  console.log(allDistances);
-  return distances;
+  allDistances.push(JSON.parse(JSON.stringify(distances)));
+  allPQ.push(JSON.parse(JSON.stringify(pq.container)));
+  let data = {
+    allDistances: allDistances,
+    allPQ: allPQ,
+    finalDistances: distances
+  };
+  return data;
 };
 
 export default dijkstrasAlgorithm;

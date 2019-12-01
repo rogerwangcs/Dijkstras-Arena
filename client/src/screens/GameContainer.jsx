@@ -197,8 +197,6 @@ class GameContainer extends Component {
   };
 
   endGame = winner => {
-    console.log(winner);
-    console.log(!winner);
     if (!winner) {
       this.props.history.push("/");
       return;
@@ -303,7 +301,6 @@ class GameContainer extends Component {
       let edge = this.state.network.body.edges[edgeId];
       adjNodes.push(edge.toId);
     });
-    console.log(adjNodes);
     return adjNodes;
   };
 

@@ -29,7 +29,7 @@ const DistanceContainer = styled.div`
   left: 0;
 `;
 
-const ShortestPathContainer = styled.div`
+const PQContainer = styled.div`
   position: absolute;
   top: 0;
   right: 0;
@@ -42,6 +42,31 @@ const DistanceItem = styled.div`
     height: 64px;
     background-color: white;
     border: 1px solid black;
+    h1 {
+      line-height: 64px;
+      margin: auto;
+      vertical-align: center;
+    }
+
+    @media (max-width: 500px) {
+      width: 24px;
+      height: 24px;
+      h1 {
+        font-size: 1em;
+        line-height: 24px;
+      }
+    }
+  }
+`;
+
+const PQItem = styled.div`
+  .block {
+    display: inline-block;
+    width: 64px;
+    height: 64px;
+    background-color: white;
+    border: 1px solid black;
+    /* border-radius: 50%; */
     h1 {
       line-height: 64px;
       margin: auto;
@@ -97,34 +122,38 @@ const ExploreContainer = styled.div`
 class GameOverlayLearn extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
   }
-  componentDidMount = () => {};
 
   render() {
-    const Distances = Object.keys(this.props.distances).map(nodeId => {
+    const step = this.props.step;
+
+    const Distances = Object.keys(this.props.allDistances[step]).map(nodeId => {
+      let distance = this.props.allDistances[step][nodeId];
+      if (this.props.allDistances[step][nodeId] === null) {
+        distance = "∞";
+      }
       return (
         <DistanceItem>
           <div className="block">
             <h1>{nodeId}</h1>
           </div>
           <div className="block">
-            <h1>{this.props.distances[nodeId]}</h1>
+            <h1>{distance}</h1>
           </div>
         </DistanceItem>
       );
     });
 
-    const ShortestPaths = Object.keys(this.props.shortestPaths).map(nodeId => {
+    const PQueue = this.props.allPQ[step].map(node => {
       return (
-        <DistanceItem>
+        <PQItem>
           <div className="block">
-            <h1>{this.props.shortestPaths[nodeId]}</h1>
+            <h1>{node.data}</h1>
           </div>
           <div className="block">
-            <h1>{nodeId}</h1>
+            <h1>{node.priority}</h1>
           </div>
-        </DistanceItem>
+        </PQItem>
       );
     });
 
@@ -142,8 +171,13 @@ class GameOverlayLearn extends Component {
           <h1>{this.props.score}</h1>
         </SScore>
         <DistanceContainer>{Distances}</DistanceContainer>
-        <ShortestPathContainer>{ShortestPaths}</ShortestPathContainer>
-        <ExploreContainer>{ExploreOptions}</ExploreContainer>
+        <PQContainer>{PQueue}</PQContainer>
+        {/* <ExploreContainer>{ExploreOptions}</ExploreContainer> */}
+        <ExploreContainer>
+          <div className="node" onClick={this.props.stepFn}>
+            <h1>Step</h1>
+          </div>
+        </ExploreContainer>
       </SGameOverlayLearn>
     );
   }

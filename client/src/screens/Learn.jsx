@@ -5,16 +5,21 @@ import graphOptions from "../utils/graphOptions";
 import defaultGraph from "../utils/defaultGraph";
 import GameOverlayLearn from "../components/GameOverlayLearn";
 import dijkstra from "../utils/Dijkstras2";
+import { throws } from "assert";
 
 const colors = {
   localNode: "#185fab",
   localVisited: "#66c9ed",
-  normal: "#c3cdde"
+  normal: "#c3cdde",
+  highlighted: "#36EEE2"
 };
 
 class Learn extends Component {
   constructor(props) {
     super(props);
+
+    let dijkstras = dijkstra(defaultGraph, "A");
+
     this.state = {
       visitedNodes: [],
       visitedEdges: [],
@@ -23,7 +28,10 @@ class Learn extends Component {
       endNode: "FIN",
       score: 0,
       shortestPaths: {},
-      distances: { A: 0, B: 0, C: 0, D: 0, E: 0, FIN: 0 },
+      distances: dijkstras.finalDistances,
+      allDistances: dijkstras.allDistances,
+      allPQ: dijkstras.allPQ,
+      step: 0,
       currentWeight: 0,
       exploreOptions: [
         { node: "A", weight: 3 },
@@ -35,9 +43,6 @@ class Learn extends Component {
 
   componentDidMount = () => {
     setTimeout(() => {
-      this.setState({
-        shortestPaths: dijkstra(defaultGraph, this.state.currentNode)
-      });
       this.renderGraph();
     }, 50);
   };
@@ -49,6 +54,12 @@ class Learn extends Component {
     this.state.network.on("click", obj => {
       this.handleClick(obj);
     });
+  };
+
+  step = () => {
+    if (this.state.step < this.state.allPQ.length - 1) {
+      this.setState({ step: this.state.step + 1 }, () => this.renderGraph());
+    }
   };
 
   handleClick = obj => {
@@ -117,6 +128,14 @@ class Learn extends Component {
     // Highlight local player node and edges
     this.selectNode(this.state.currentNode, colors.localNode);
     this.selectEdges(this.state.currentNode, colors.localNode);
+
+    this.state.allPQ[this.state.step].forEach(node => {
+      this.selectNode(node.data, colors.highlighted);
+    });
+    // this.selectNode(
+    //   this.state.allPQ[this.state.step][0].data,
+    //   colors.highlighted
+    // );
 
     this.forceUpdate();
   };
@@ -215,8 +234,10 @@ class Learn extends Component {
         />
         <GameOverlayLearn
           score={this.state.score}
-          distances={this.state.distances}
-          shortestPaths={this.state.shortestPaths}
+          allDistances={this.state.allDistances}
+          allPQ={this.state.allPQ}
+          step={this.state.step}
+          stepFn={this.step}
           exploreOptions={this.state.exploreOptions}
         />
       </React.Fragment>
