@@ -44,6 +44,16 @@ const generateGraph = size => {
           label: weight
         });
       }
+
+      // cross edges between two player's graphs
+      if (Math.random() < 0.35) {
+        weight = Math.floor(Math.random() * 2) + 1;
+        graph.edges.push({
+          from: i,
+          to: i + size,
+          label: weight
+        });
+      }
     }
 
     if (i >= 3 && Math.random() < 0.5) {
@@ -78,7 +88,7 @@ const generateGraph = size => {
     label: weight
   });
 
-  console.log(graph);
+  console.log(size * size);
   return graph;
 };
 

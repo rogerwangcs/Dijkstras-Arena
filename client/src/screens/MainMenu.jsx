@@ -61,9 +61,6 @@ class MainMenu extends Component {
     this.state = {};
   }
 
-  componentDidMount = () => {
-    dijkstra();
-  };
   render() {
     return (
       <SMainMenu>

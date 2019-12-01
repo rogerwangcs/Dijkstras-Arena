@@ -8,16 +8,16 @@ import defaultGraph from "../utils/defaultGraph";
 // import dijkstras from "../utils/dijkstras";
 import io from "socket.io-client";
 
-// const socketUrl = "http://localhost:4000/";
+const socketUrl = "http://localhost:4000/";
 // const socketUrl = "136.167.212.5:4000";
-const socketUrl = "192.168.1.23:4000";
 
 const colors = {
   localNode: "#185fab",
   localVisited: "#66c9ed",
   remoteNode: "#cf4121",
   remoteVisited: "#ff8870",
-  normal: "#c3cdde"
+  normal: "#c3cdde",
+  finalNode: "green"
 };
 
 var events = {
@@ -241,8 +241,15 @@ class GameContainer extends Component {
     this.selectNode(opponent.currentNode, colors.remoteNode);
     this.selectEdges(opponent.currentNode, colors.remoteNode);
     // Highlight local player node and edges
-    let currentNode = this.selectNode(player.currentNode, colors.localNode);
+    this.selectNode(player.currentNode, colors.localNode);
     this.selectEdges(player.currentNode, colors.localNode);
+
+    // Highlight final node
+    let finalNodeId = Math.pow(
+      (this.state.gameGraph.nodes.length - 1) / 2 + 1,
+      2
+    );
+    this.selectNode(finalNodeId, colors.finalNode);
 
     this.forceUpdate();
   };
@@ -333,7 +340,7 @@ class GameContainer extends Component {
     if (this.state.playerId == null)
       return <Lobby enterQueue={this.enterQueue} />;
     return (
-      <div className="App">
+      <React.Fragment>
         <Graph
           style={{ width: "100%", height: "100%", margin: "0px" }}
           graph={this.state.gameGraph}
@@ -359,7 +366,7 @@ class GameContainer extends Component {
             ]
           }}
         />
-      </div>
+      </React.Fragment>
     );
   }
 }

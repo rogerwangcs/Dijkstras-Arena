@@ -37,7 +37,7 @@ export default {
     }
   },
   interaction: {
-    dragNodes: false,
+    dragNodes: true,
     dragView: true,
     zoomView: true,
     selectConnectedEdges: false

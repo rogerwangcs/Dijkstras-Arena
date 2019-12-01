@@ -50,7 +50,7 @@ class GameOverlay extends Component {
   }
 
   componentWillReceiveProps = newProps => {
-    if (newProps.moving && newProps.moving != this.props.moving) {
+    if (newProps.moving && newProps.moving !== this.props.moving) {
       let progress = new ProgressBar.Circle("#moveProgress", {
         strokeWidth: 15,
         easing: "easeOut",

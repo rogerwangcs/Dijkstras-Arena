@@ -1,5 +1,6 @@
 const express = require("express");
 const http = require("http");
+const path = require("path");
 const socketIo = require("socket.io");
 const axios = require("axios");
 
@@ -7,12 +8,10 @@ const port = process.env.PORT || 4000;
 const routes = require("./routes/index");
 
 const app = express();
+app.use(express.static(path.join(__dirname, "/client/build")));
 app.use(routes);
 const server = http.createServer(app);
-
-const io = socketIo(server); // <- Interesting!
-
-const getApiAndEmit = "TODO";
+const io = socketIo(server);
 
 const generateGraph = require("./generateGraph");
 let lobbyQueue = [];
@@ -47,7 +46,7 @@ const startGame = (players, names) => {
   let newGame = new Game();
   let gameId = "game" + p1Id + "-" + p2Id;
   newGame.id = gameId;
-  newGame.gameSize = Math.floor(Math.random() * 0) + 6;
+  newGame.gameSize = Math.floor(Math.random() * 8) + 12;
   newGame.gameGraph = generateGraph(newGame.gameSize);
   newGame.players.push(p1Id);
   newGame.players.push(p2Id);
