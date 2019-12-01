@@ -8,7 +8,7 @@ import defaultGraph from "../utils/defaultGraph";
 // import dijkstras from "../utils/dijkstras";
 import io from "socket.io-client";
 
-const socketUrl = process.env.URL || "http://localhost:4000/";
+const socketUrl = process.env.URL;
 // const socketUrl = "http://localhost:4000/";
 // const socketUrl = "136.167.212.5:4000";
 
