@@ -52,7 +52,7 @@ class GameContainer extends Component {
   enterQueue = playerName => {
     this.setState(
       {
-        socket: io(socketUrl, {
+        socket: io({
           query: {
             name: playerName
           }
