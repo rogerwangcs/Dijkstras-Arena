@@ -8,8 +8,8 @@ import defaultGraph from "../utils/defaultGraph";
 // import dijkstras from "../utils/dijkstras";
 import io from "socket.io-client";
 
-const socketUrl = "https://localhost:" + process.env.PORT || 4000;
-// const socketUrl = "http://localhost:4000/";
+// const socketUrl = "https://localhost:" + process.env.PORT || 4000;
+ const socketUrl = "http://localhost:4000/";
 // const socketUrl = "136.167.212.5:4000";
 
 const colors = {
@@ -52,7 +52,7 @@ class GameContainer extends Component {
   enterQueue = playerName => {
     this.setState(
       {
-        socket: io({
+        socket: io( socketUrl, {
           query: {
             name: playerName
           }

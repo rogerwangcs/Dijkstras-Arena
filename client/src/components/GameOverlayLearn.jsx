@@ -23,13 +23,37 @@ const SScore = styled.div`
   }
 `;
 
+const STeachMe = styled.div`
+position: absolute;
+top: 10px;
+right: 100px;
+transform: translate(-50%);
+width: 100px;
+height: 100px;
+margin: 25px;
+border-radius: 50%;
+background-color: gray;
+border: 10px solid lightgray;
+h1 {
+  line-height: 100px;
+  font-size: 1.5em;
+  color: white;
+}
+:hover {
+  cursor: pointer;
+  background-color: lightgray;
+}
+`;
+
 const DistanceContainer = styled.div`
+display: ${props => props.teacher ? "block" : "none"};
   position: absolute;
   top: 0;
   left: 0;
 `;
 
 const PQContainer = styled.div`
+display: ${props => props.teacher ? "block" : "none"};
   position: absolute;
   top: 0;
   right: 0;
@@ -85,12 +109,14 @@ const PQItem = styled.div`
 `;
 
 const ExploreContainer = styled.div`
+  display: ${props => props.teacher ? "block" : "none"};
   position: absolute;
   top: 75vh;
   left: 50%;
   transform: translate(-50%);
   display: flex;
   .node {
+    display: ${props => props.teacher ? "block" : "none"};
     width: 100px;
     height: 100px;
     margin: 25px;
@@ -123,6 +149,13 @@ const ExploreContainer = styled.div`
 class GameOverlayLearn extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      teacher: false
+    };
+  }
+
+  startTeacher = () => {
+      this.setState({teacher: !this.state.teacher});
   }
 
   render() {
@@ -171,14 +204,17 @@ class GameOverlayLearn extends Component {
         <SScore>
           <h1>{this.props.score}</h1>
         </SScore>
-        <DistanceContainer>{Distances}</DistanceContainer>
-        <PQContainer>{PQueue}</PQContainer>
+        <DistanceContainer teacher={this.state.teacher}>{Distances}</DistanceContainer>
+        <PQContainer teacher={this.state.teacher}>{PQueue}</PQContainer>
         {/* <ExploreContainer>{ExploreOptions}</ExploreContainer> */}
-        <ExploreContainer>
+        <ExploreContainer teacher={this.state.teacher}>
           <div className="node" onClick={this.props.stepFn}>
             <h1>Step</h1>
           </div>
         </ExploreContainer>
+        <STeachMe onClick={()=> this.startTeacher()}>
+          <h1>TeachMe</h1>
+        </STeachMe>
       </SGameOverlayLearn>
     );
   }

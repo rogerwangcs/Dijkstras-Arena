@@ -74,7 +74,7 @@ class Learn extends Component {
     if (obj.nodes[0] === this.state.currentNode) return;
     // skip if not adjaent node
     let availableNodes = net.getConnectedNodes(this.state.currentNode);
-    if (!availableNodes.includes(obj.nodes[0])) return;
+    if (!availableNodes.includes(obj.nodes[0])  ) return;
 
     // Make Move
     this.move(obj.nodes[0]);
