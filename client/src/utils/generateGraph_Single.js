@@ -132,11 +132,12 @@ const generateGraph_Single = size => {
           case (size < 50): exp = 0.12; break;
           case (size < 55): exp = 0.1; break;
           case (size < 60): exp = 0.07; break;
-          case (size < 70): exp = 0.06; break;
-          case (size < 80): exp = 0.05; break;
-          case (size < 90): exp = 0.04; break;
-          default: exp = 0.01;
+          case (size < 70): exp = 0.065; break;
+          case (size < 80): exp = 0.06; break;
+          case (size < 90): exp = 0.055; break;
+          default: exp = 0.05;
         }
+        // console.log(size);
 
 
         // if (dist < Math.pow(Math.random() * Math.pow(size,exp) * 1, 1/exp)) {

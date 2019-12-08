@@ -14,11 +14,15 @@ const colors = {
   highlighted: "#36EEE2"
 };
 
+let size = 2;
+let vel = 5
+
 class Intro extends Component {
   constructor(props) {
     super(props);
-
-    let generatedGraph = generateGraph_Single(30);
+    size = size + vel;
+    vel = vel + 5;
+    let generatedGraph = generateGraph_Single(size);
     let dijkstras = dijkstra(generatedGraph, "A");
     this.state = {
       visitedNodes: [],
@@ -40,7 +44,18 @@ class Intro extends Component {
         { node: "C", weight: 4 }
       ]
     };
+    // this.baseState = this.state;
+    // console.log(this.baseState);
   }
+
+  // resetForm = () => {
+  //   console.log("resetForm Reached");
+  //   console.log(this.baseState);
+  //   console.log(this.state);
+  //   this.setState(this.baseState)
+  //   setTimeout(() => this.getAdjNodes(), 10000);
+  //   console.log("resetForm Finished");
+  // }
 
   componentDidMount = () => {
     setTimeout(() => {
@@ -86,6 +101,11 @@ class Intro extends Component {
     // State setup
     const net = this.state.network;
     let newState = this.state;
+    // console.log(nextNodeId);
+    // if (nextNodeId == String.fromCharCode(65 + size)){
+    //   console.log("reaching resetForm");
+    //   this.resetForm();
+    // }
 
     //Add edge traversed to score
     const edges = net.getConnectedEdges(nextNodeId);
