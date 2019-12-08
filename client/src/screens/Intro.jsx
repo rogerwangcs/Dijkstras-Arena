@@ -15,7 +15,7 @@ const colors = {
 };
 
 let size = 2;
-let vel = 5
+let vel = 5;
 
 class Intro extends Component {
   constructor(props) {

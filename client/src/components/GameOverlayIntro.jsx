@@ -23,27 +23,27 @@ const SScore = styled.div`
   }
 `;
 
-const STeachMe = styled.div`
-position: absolute;
-top: 10px;
-right: 100px;
-transform: translate(-50%);
-width: 100px;
-height: 100px;
-margin: 25px;
-border-radius: 50%;
-background-color: gray;
-border: 10px solid lightgray;
-h1 {
-  line-height: 100px;
-  font-size: 1.5em;
-  color: white;
-}
-:hover {
-  cursor: pointer;
-  background-color: lightgray;
-}
-`;
+// const STeachMe = styled.div`
+// position: absolute;
+// top: 10px;
+// right: 100px;
+// transform: translate(-50%);
+// width: 100px;
+// height: 100px;
+// margin: 25px;
+// border-radius: 50%;
+// background-color: gray;
+// border: 10px solid lightgray;
+// h1 {
+//   line-height: 100px;
+//   font-size: 1.5em;
+//   color: white;
+// }
+// :hover {
+//   cursor: pointer;
+//   background-color: lightgray;
+// }
+// `;
 
 const DistanceContainer = styled.div`
 display: ${props => props.teacher ? "block" : "none"};
@@ -154,9 +154,9 @@ class GameOverlayLearn extends Component {
     };
   }
 
-  startTeacher = () => {
-      this.setState({teacher: !this.state.teacher});
-  }
+  // startTeacher = () => {
+  //     this.setState({teacher: !this.state.teacher});
+  // }
 
   render() {
     const step = this.props.step;
@@ -212,9 +212,6 @@ class GameOverlayLearn extends Component {
             <h1>Step</h1>
           </div>
         </ExploreContainer>
-        <STeachMe onClick={()=> this.startTeacher()}>
-          <h1>TeachMe</h1>
-        </STeachMe>
       </SGameOverlayLearn>
     );
   }

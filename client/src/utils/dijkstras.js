@@ -18,7 +18,7 @@ const createAdjListGraph = graphObj => {
 const dijkstrasAlgorithm = (graph, startNode) => {
   let adjList = createAdjListGraph(graph);
   let distances = {};
-  console.log(adjList);
+  // console.log(adjList);
 
   // Stores the reference to previous nodes
   let prev = {};
@@ -36,10 +36,12 @@ const dijkstrasAlgorithm = (graph, startNode) => {
 
   let allDistances = [];
   let allPQ = [];
+  let allPrev = [];
 
   while (!pq.isEmpty()) {
     allDistances.push(JSON.parse(JSON.stringify(distances)));
     allPQ.push(JSON.parse(JSON.stringify(pq.container)));
+    allPrev.push(JSON.parse(JSON.stringify(prev)));
     let minNode = pq.dequeue();
     let currNode = minNode.data;
     let weight = minNode.priority;
@@ -58,14 +60,17 @@ const dijkstrasAlgorithm = (graph, startNode) => {
         }
         allDistances.push(JSON.parse(JSON.stringify(distances)));
         allPQ.push(JSON.parse(JSON.stringify(pq.container)));
+        allPrev.push(JSON.parse(JSON.stringify(prev)));
       }
     });
   }
   // allDistances.push(JSON.parse(JSON.stringify(distances)));
   // allPQ.push(JSON.parse(JSON.stringify(pq.container)));
+  // allPrev.push(JSON.parse(JSON.stringify(prev)));
   let data = {
     allDistances: allDistances,
     allPQ: allPQ,
+    allPrev: allPrev,
     finalDistances: distances
   };
   return data;

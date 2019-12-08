@@ -156,17 +156,32 @@ const generateGraph_Single = size => {
     // }
   }
 
+  // let weight = Math.floor(Math.random() * 10) + 1;
+  // graph.nodes.push({
+  //   id: String.fromCharCode(65 + size),
+  //   label: "FIN",
+  //   font: font
+  // });
+  // graph.edges.push({
+  //   from: String.fromCharCode(65 + size - 1),
+  //   to: String.fromCharCode(65 + size),
+  //   label: weight
+  // });
+
+
   let weight = Math.floor(Math.random() * 10) + 1;
   graph.nodes.push({
-    id: String.fromCharCode(65 + size),
+    id: "FIN",
     label: "FIN",
     font: font
   });
   graph.edges.push({
     from: String.fromCharCode(65 + size - 1),
-    to: String.fromCharCode(65 + size),
+    to: "FIN",
     label: weight
   });
+
+
   // graph.edges.push({
   //   from: size - 1 + size,
   //   to: size * size,

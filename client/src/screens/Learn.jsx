@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import Graph from "vis-react";
 import graphOptions from "../utils/graphOptions";
-import defaultGraph from "../utils/defaultGraph";
+import default_Graph from "../utils/defaultGraph";
+import generateGraph_Single from "../utils/generateGraph_Single";
+
 import GameOverlayLearn from "../components/GameOverlayLearn";
 import dijkstra from "../utils/dijkstras";
 
@@ -13,12 +15,20 @@ const colors = {
   highlighted: "#36EEE2"
 };
 
+let defaultGraph;
+let size = 2;
+let vel = 5;
+
 class Learn extends Component {
   constructor(props) {
     super(props);
 
+    size = size + vel;
+    vel = vel + 5;
+    // let dijkstras = dijkstra(defaultGraph, "A");
+    defaultGraph = generateGraph_Single(size);
     let dijkstras = dijkstra(defaultGraph, "A");
-
+    // let dijkstras = dijkstra(generateGraph_Single(10), "A");
     this.state = {
       visitedNodes: [],
       visitedEdges: [],
@@ -30,6 +40,7 @@ class Learn extends Component {
       distances: dijkstras.finalDistances,
       allDistances: dijkstras.allDistances,
       allPQ: dijkstras.allPQ,
+      allPrev: dijkstras.allPrev,
       step: 0,
       currentWeight: 0,
       exploreOptions: [
@@ -130,7 +141,11 @@ class Learn extends Component {
 
     this.state.allPQ[this.state.step].forEach(node => {
       this.selectNode(node.data, colors.highlighted);
+      this.selectEdgeFromList(this.state.allPrev[this.state.step], colors.highlighted);
     });
+
+    //this.selectEdgeFromList(this.state.allPrev[this.state.step2], colors.localVisited);
+
     // this.selectNode(
     //   this.state.allPQ[this.state.step][0].data,
     //   colors.highlighted
@@ -167,7 +182,7 @@ class Learn extends Component {
    * Color edges around given node
    */
   selectEdges = (nodeId, color) => {
-    let edges = this.state.network.getConnectedEdges(nodeId);
+      let edges = this.state.network.getConnectedEdges(nodeId);
     edges.forEach(edgeId => {
       let edge = this.state.network.body.edges[edgeId];
       edge.options.color.color = color;
@@ -207,6 +222,24 @@ class Learn extends Component {
       edge.options.color.color = color;
       edge.options.width = 10;
     });
+  };
+
+  selectEdgeFromList = (edge, color) => {
+    let keys = Object.keys(edge);
+    let values = Object.values(edge);
+    for (let i = 0; i < keys.length; i++) {
+      let edgeA = null;
+      if (values[i] !== null) {
+        let edgeB = values[i] + "-" + keys[i];
+        console.log(edgeB);
+        Object.values(this.state.network.body.edges).forEach(e => {
+          if (e.fromId + "-" + e.toId === edgeB || e.toId + "-" + e.fromId === edgeB) {
+            e.options.color.color = color;
+            e.options.width = 10;
+          }
+        });
+      };
+    };
   };
 
   getNetwork = data => {
