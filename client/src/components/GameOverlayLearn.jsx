@@ -150,12 +150,26 @@ class GameOverlayLearn extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      teacher: false
+      teacher: false,
+      text: "TeachMe"
     };
   }
 
   startTeacher = () => {
       this.setState({teacher: !this.state.teacher});
+      if (this.state.text == "TeachMe") {
+        this.state.text = "Hide";
+      } else {
+        this.state.text = "TeachMe"
+      }
+  }
+
+  showW = () => {
+    if (this.props.teacher) {
+      return <h1>Hide</h1>;
+    } else {
+      return <h1>TeachMe</h1>;
+    }
   }
 
   render() {
@@ -213,7 +227,7 @@ class GameOverlayLearn extends Component {
           </div>
         </ExploreContainer>
         <STeachMe onClick={()=> this.startTeacher()}>
-          <h1>TeachMe</h1>
+          <h1>{this.state.text}</h1>
         </STeachMe>
       </SGameOverlayLearn>
     );

@@ -40,14 +40,15 @@ const dijkstrasAlgorithm = (graph, startNode) => {
     let currNode = minNode.data;
     let weight = minNode.priority;
     adjList[currNode].forEach(neighbor => {
-      let alt;
-      distances[currNode] === Infinity
-        ? (alt = neighbor.weight)
-        : (alt = distances[currNode] + neighbor.weight);
+      let alt = distances[currNode] + neighbor.weight;
       if (alt < distances[neighbor.node]) {
         distances[neighbor.node] = alt;
         prev[neighbor.node] = currNode;
-        pq.enqueue(neighbor.node, distances[neighbor.node]);
+        if (!pq.contain(neighbor.node)) {
+          pq.enqueue(neighbor.node, distances[neighbor.node]);
+        } else {
+          pq.update(neighbor.node, alt);
+        }
         allDistances.push(JSON.parse(JSON.stringify(distances)));
         allPQ.push(JSON.parse(JSON.stringify(pq.container)));
       }
