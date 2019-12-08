@@ -20,8 +20,8 @@ export default {
     { from: "C", to: "D", label: 8 },
     { from: "B", to: "D", label: 5 },
     { from: "C", to: "E", label: 10 },
-    { from: "D", to: "FIN", label: 6 },
     { from: "D", to: "E", label: 2 },
+    { from: "D", to: "FIN", label: 6 },
     { from: "E", to: "FIN", label: 5 }
   ]
 };

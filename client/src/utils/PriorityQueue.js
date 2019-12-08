@@ -46,7 +46,31 @@ class PriorityQueue {
       console.log("Queue Underflow!");
       return;
     }
-    return this.container.pop();
+    return this.container.shift();
+  }
+  contain(data) {
+    if (this.isEmpty()) {
+      console.log("Queue Underflow!");
+      return;
+    }
+    for (let i = 0; i < this.container.length; i++) {
+      if (data == this.container[i].data) {
+        return true;
+      }
+    }
+    return false;
+  }
+  update(data, priority) {
+    if (this.isEmpty()) {
+      console.log("Queue Underflow!");
+      return;
+    }
+    for (let i = 0; i < this.container.length; i++) {
+      if (data == this.container[i].data) {
+        this.container[i].priority = priority;
+        return;
+      }
+    }
   }
   peek() {
     if (this.isEmpty()) {
