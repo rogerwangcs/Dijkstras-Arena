@@ -63,6 +63,11 @@ class MainMenu extends Component {
     return (
       <SMainMenu>
         <h1>Dijkstra's Arena</h1>
+        <SButton onClick={() => this.props.history.push("/intro")}>
+          <div>
+            <p>Introduction</p>
+          </div>
+        </SButton>
         <SButton onClick={() => this.props.history.push("/learn")}>
           <div>
             <p>Learn Dijkstra</p>

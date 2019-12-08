@@ -1,11 +1,14 @@
 import { PriorityQueue } from "./PriorityQueue.js";
 
 const createAdjListGraph = graphObj => {
+  console.log(graphObj);
   let adjList = {};
   graphObj.nodes.forEach(node => {
     adjList[node.id] = [];
   });
+  console.log(adjList);
   graphObj.edges.forEach(edge => {
+    console.log(edge);
     adjList[edge.from].push({ node: edge.to, weight: edge.label });
     adjList[edge.to].push({ node: edge.from, weight: edge.label });
   });
@@ -15,6 +18,7 @@ const createAdjListGraph = graphObj => {
 const dijkstrasAlgorithm = (graph, startNode) => {
   let adjList = createAdjListGraph(graph);
   let distances = {};
+  console.log(adjList);
 
   // Stores the reference to previous nodes
   let prev = {};
@@ -39,6 +43,9 @@ const dijkstrasAlgorithm = (graph, startNode) => {
     let minNode = pq.dequeue();
     let currNode = minNode.data;
     let weight = minNode.priority;
+    console.log(adjList[currNode]);
+    console.log(currNode);
+    console.log(minNode);
     adjList[currNode].forEach(neighbor => {
       let alt;
       distances[currNode] === Infinity
@@ -53,8 +60,8 @@ const dijkstrasAlgorithm = (graph, startNode) => {
       }
     });
   }
-  allDistances.push(JSON.parse(JSON.stringify(distances)));
-  allPQ.push(JSON.parse(JSON.stringify(pq.container)));
+  // allDistances.push(JSON.parse(JSON.stringify(distances)));
+  // allPQ.push(JSON.parse(JSON.stringify(pq.container)));
   let data = {
     allDistances: allDistances,
     allPQ: allPQ,

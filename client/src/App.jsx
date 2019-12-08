@@ -9,6 +9,7 @@ import {
 
 import MainMenu from "./screens/MainMenu";
 import Lobby from "./screens/Lobby";
+import Intro from "./screens/Intro";
 import Learn from "./screens/Learn";
 import GameContainer from "./screens/GameContainer.jsx";
 
@@ -34,6 +35,11 @@ class App extends Component {
               exact
               path={process.env.PUBLIC_URL + "/"}
               component={MainMenu}
+            />
+            <Route
+              exact
+              path={process.env.PUBLIC_URL + "/intro"}
+              component={Intro}
             />
             <Route
               exact

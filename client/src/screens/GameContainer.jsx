@@ -10,6 +10,7 @@ import io from "socket.io-client";
 
 // const socketUrl = "https://localhost:" + process.env.PORT || 4000;
  const socketUrl = "http://localhost:4000/";
+// const socketUrl = "http://10.0.0.204:4000/";
 // const socketUrl = "136.167.212.5:4000";
 
 const colors = {
@@ -104,7 +105,9 @@ class GameContainer extends Component {
     });
 
     this.state.socket.on("endGame", data => {
-      this.endGame(data.winner);
+      console.log(data);
+      this.endGame(data.winner, data.winnerScore, data.loserScore);
+
     });
   };
 
@@ -196,15 +199,15 @@ class GameContainer extends Component {
     });
   };
 
-  endGame = winner => {
+  endGame = (winner, winnerScore, loserScore) => {
     if (!winner) {
       this.props.history.push("/");
       return;
     }
     if (this.state.playerId === winner) {
-      alert("you win!");
+      alert("you win! Your Score: " + winnerScore + ".  Opponent's Score: " + loserScore);
     } else {
-      alert("you lose!");
+      alert("you lose! Your Score: " + loserScore + ".  Opponent's Score: " + winnerScore);
     }
     setTimeout(() => this.props.history.push("/"), 3000);
   };
