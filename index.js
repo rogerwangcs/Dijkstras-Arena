@@ -156,7 +156,11 @@ io.on("connection", socket => {
       if (
         player.currentNode === Math.pow(gameServer[data.gameId].gameSize, 2)
       ) {
-        io.to(data.gameId).emit("endGame", { winner: player.id });
+        io.to(data.gameId).emit("endGame", {
+          winner: player.id,
+          winnerScore: player.score,
+          loserScore: opponent.score
+        });
         playerQuit(socket.id);
       }
       io.to(data.gameId).emit("getStateServerEmit", { gameState: gameState });

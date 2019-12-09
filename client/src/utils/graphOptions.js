@@ -2,6 +2,17 @@ export default {
   width: "100%",
   height: "100%",
   autoResize: true,
+  physics: {
+    enabled: true,
+    repulsion: {
+      nodeDiatance: 100,
+      centralGravity: 0.2,
+      springLength: 200,
+      springConstant: .05,
+      damping: 0.09,
+    },
+  },
+  solver: "repulsion",
   nodes: {
     fixed: {
       x: false,
