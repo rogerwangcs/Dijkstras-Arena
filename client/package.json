@@ -6,6 +6,7 @@
     "google-closure-library": "^20191111.0.0",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
+    "react-particles-js": "^2.7.0",
     "react-scripts": "3.2.0",
     "socket.io-client": "^2.3.0",
     "vis-react": "^0.4.6"

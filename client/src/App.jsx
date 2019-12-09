@@ -18,8 +18,15 @@ const socket = null;
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      level: 1
+    };
   }
+
+  nextLevel = () => {
+    this.setState({ level: (this.state.level += 1) });
+    console.log("yes");
+  };
 
   componentDidMount = () => {
     if (!localStorage.getItem("matchHistory"))
@@ -44,7 +51,9 @@ class App extends Component {
             <Route
               exact
               path={process.env.PUBLIC_URL + "/learn"}
-              component={Learn}
+              component={() => (
+                <Learn level={this.state.level} nextLevel={this.nextLevel} />
+              )}
             />
             <Route
               exact

@@ -64,9 +64,6 @@ const dijkstrasAlgorithm = (graph, startNode) => {
       }
     });
   }
-  // allDistances.push(JSON.parse(JSON.stringify(distances)));
-  // allPQ.push(JSON.parse(JSON.stringify(pq.container)));
-  // allPrev.push(JSON.parse(JSON.stringify(prev)));
   let data = {
     allDistances: allDistances,
     allPQ: allPQ,

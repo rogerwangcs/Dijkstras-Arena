@@ -14,21 +14,15 @@ const colors = {
   normal: "#c3cdde",
   highlighted: "#36EEE2"
 };
-
 let defaultGraph;
-let size = 2;
-let vel = 5;
 
 class Learn extends Component {
   constructor(props) {
     super(props);
 
-    size = size + vel;
-    vel = vel + 5;
-    // let dijkstras = dijkstra(defaultGraph, "A");
-    defaultGraph = generateGraph_Single(size);
+    defaultGraph = generateGraph_Single(props.level * 5);
     let dijkstras = dijkstra(defaultGraph, "A");
-    // let dijkstras = dijkstra(generateGraph_Single(10), "A");
+
     this.state = {
       visitedNodes: [],
       visitedEdges: [],
@@ -66,6 +60,10 @@ class Learn extends Component {
     });
   };
 
+  isLevelComplete = () => {
+    return this.state.currentNode === this.state.endNode;
+  };
+
   step = () => {
     if (this.state.step < this.state.allPQ.length - 1) {
       this.setState({ step: this.state.step + 1 }, () => this.renderGraph());
@@ -85,7 +83,7 @@ class Learn extends Component {
     if (obj.nodes[0] === this.state.currentNode) return;
     // skip if not adjaent node
     let availableNodes = net.getConnectedNodes(this.state.currentNode);
-    if (!availableNodes.includes(obj.nodes[0])  ) return;
+    if (!availableNodes.includes(obj.nodes[0])) return;
 
     // Make Move
     this.move(obj.nodes[0]);
@@ -136,13 +134,17 @@ class Learn extends Component {
       this.selectEdgesFromList(this.state.visitedEdges, colors.localVisited);
 
     // Highlight local player node and edges
-    this.selectNode(this.state.currentNode, colors.localNode);
-    this.selectEdges(this.state.currentNode, colors.localNode);
 
     this.state.allPQ[this.state.step].forEach(node => {
       this.selectNode(node.data, colors.highlighted);
-      this.selectEdgeFromList(this.state.allPrev[this.state.step], colors.highlighted);
+      this.selectEdgeFromList(
+        this.state.allPrev[this.state.step],
+        colors.highlighted
+      );
     });
+
+    this.selectNode(this.state.currentNode, colors.localNode);
+    this.selectEdges(this.state.currentNode, colors.localNode);
 
     //this.selectEdgeFromList(this.state.allPrev[this.state.step2], colors.localVisited);
 
@@ -182,7 +184,7 @@ class Learn extends Component {
    * Color edges around given node
    */
   selectEdges = (nodeId, color) => {
-      let edges = this.state.network.getConnectedEdges(nodeId);
+    let edges = this.state.network.getConnectedEdges(nodeId);
     edges.forEach(edgeId => {
       let edge = this.state.network.body.edges[edgeId];
       edge.options.color.color = color;
@@ -233,13 +235,16 @@ class Learn extends Component {
         let edgeB = values[i] + "-" + keys[i];
         console.log(edgeB);
         Object.values(this.state.network.body.edges).forEach(e => {
-          if (e.fromId + "-" + e.toId === edgeB || e.toId + "-" + e.fromId === edgeB) {
+          if (
+            e.fromId + "-" + e.toId === edgeB ||
+            e.toId + "-" + e.fromId === edgeB
+          ) {
             e.options.color.color = color;
             e.options.width = 10;
           }
         });
-      };
-    };
+      }
+    }
   };
 
   getNetwork = data => {
@@ -271,6 +276,9 @@ class Learn extends Component {
           step={this.state.step}
           stepFn={this.step}
           exploreOptions={this.state.exploreOptions}
+          level={this.props.level}
+          nextLevel={this.props.nextLevel}
+          isLevelComplete={this.isLevelComplete}
         />
       </React.Fragment>
     );

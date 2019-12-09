@@ -40,8 +40,6 @@ class Player {
   }
 }
 
-var size = 5;
-
 const startGame = (players, names) => {
   p1Id = players[0];
   p2Id = players[1];
@@ -49,10 +47,8 @@ const startGame = (players, names) => {
   let newGame = new Game();
   let gameId = "game" + p1Id + "-" + p2Id;
   newGame.id = gameId;
-  // newGame.gameSize = Math.floor(Math.random() * 8) + 12;
-  // newGame.gameSize = size;
-  newGame.gameGraph = generateGraph(size);
-  size = size + 5;
+  newGame.gameSize = Math.floor(Math.random() * 8) + 12;
+  newGame.gameGraph = generateGraph(newGame.gameSize);
   newGame.players.push(p1Id);
   newGame.players.push(p2Id);
   newGame.gameState = {
@@ -160,7 +156,11 @@ io.on("connection", socket => {
       if (
         player.currentNode === Math.pow(gameServer[data.gameId].gameSize, 2)
       ) {
-        io.to(data.gameId).emit("endGame", { winner: player.id, winnerScore: player.score, loserScore: opponent.score});
+        io.to(data.gameId).emit("endGame", {
+          winner: player.id,
+          winnerScore: player.score,
+          loserScore: opponent.score
+        });
         playerQuit(socket.id);
       }
       io.to(data.gameId).emit("getStateServerEmit", { gameState: gameState });
