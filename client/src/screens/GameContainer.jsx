@@ -8,10 +8,7 @@ import defaultGraph from "../utils/defaultGraph";
 // import dijkstras from "../utils/dijkstras";
 import io from "socket.io-client";
 
-// const socketUrl = "https://localhost:" + process.env.PORT || 4000;
- const socketUrl = "http://localhost:4000/";
-// const socketUrl = "http://10.0.0.204:4000/";
-// const socketUrl = "136.167.212.5:4000";
+const socketUrl = "https://localhost:" + process.env.PORT || 4000;
 
 const colors = {
   localNode: "#185fab",
@@ -53,7 +50,7 @@ class GameContainer extends Component {
   enterQueue = playerName => {
     this.setState(
       {
-        socket: io( socketUrl, {
+        socket: io(socketUrl, {
           query: {
             name: playerName
           }
@@ -107,7 +104,6 @@ class GameContainer extends Component {
     this.state.socket.on("endGame", data => {
       console.log(data);
       this.endGame(data.winner, data.winnerScore, data.loserScore);
-
     });
   };
 
@@ -205,9 +201,19 @@ class GameContainer extends Component {
       return;
     }
     if (this.state.playerId === winner) {
-      alert("you win! Your Score: " + winnerScore + ".  Opponent's Score: " + loserScore);
+      alert(
+        "you win! Your Score: " +
+          winnerScore +
+          ".  Opponent's Score: " +
+          loserScore
+      );
     } else {
-      alert("you lose! Your Score: " + loserScore + ".  Opponent's Score: " + winnerScore);
+      alert(
+        "you lose! Your Score: " +
+          loserScore +
+          ".  Opponent's Score: " +
+          winnerScore
+      );
     }
     setTimeout(() => this.props.history.push("/"), 3000);
   };
