@@ -8,7 +8,8 @@ import defaultGraph from "../utils/defaultGraph";
 // import dijkstras from "../utils/dijkstras";
 import io from "socket.io-client";
 
-const socketUrl = "https://localhost:" + process.env.PORT || 4000;
+// const socketUrl = "https://localhost:" + process.env.PORT || 4000;
+const socketUrl = "https://dijkstras-arena.herokuapp.com/";
 
 const colors = {
   localNode: "#185fab",
